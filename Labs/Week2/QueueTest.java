@@ -33,9 +33,10 @@ class Queue {
 
   // assume the queue is non-empty when this method is called
     public int deQueue() {
-        
+        int deleting = head.data;
+        head = head.next;
         // missing code
-        return 0;
+        return deleting;
     }
     
 
@@ -44,7 +45,16 @@ class Queue {
     }
   
     public boolean isMember(int x) {
-        
+        Node t = head;
+        while( t != t.next) {
+            if (t.data == x) {
+                return true;
+            } else if (t.next != null) {
+                t = t.next;
+            } else {
+                return false;
+            }
+        }
         return false;
     }
     
@@ -80,8 +90,8 @@ class QueueTest {
     System.out.println("\n is 12 in queue? " + q.isMember(12));
 	System.out.println("\n is 6 in queue? " + q.isMember(6));
     
-    //if( ! q.isEmpty())
-        //System.out.println("Deleting value from queue " + q.deQueue() + "\n");
+    if( ! q.isEmpty())
+        System.out.println("Deleting value from queue " + q.deQueue() + "\n");
 
     System.out.println("Adding value to queue " + 27 + "\n");
 
