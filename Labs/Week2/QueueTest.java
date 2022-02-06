@@ -35,7 +35,7 @@ class Queue {
     public int deQueue() {
         int deleting = head.data;
         head = head.next;
-        // missing code
+        
         return deleting;
     }
     
