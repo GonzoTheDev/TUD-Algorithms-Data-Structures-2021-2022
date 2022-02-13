@@ -119,7 +119,7 @@ class QueueCB implements Queue {
             for (i = front; i != back; i = (i + 1) % qmax)
                 System.out.print(q[i] + " ");
             System.out.println(q[i]);
-            System.out.println("Rear -> " + back);
+            System.out.println("Back -> " + back);
         }
     }
 }
@@ -135,7 +135,6 @@ class QueueTest2 {
         for(int i = 1; i<9; ++i)
         try { 
             q1.enQueue(i);
-            System.out.println("LL Enqueue Success: " + i);                
         } catch (QueueException e) {
             System.out.println("Exception thrown: " + e); 
         }
@@ -145,7 +144,7 @@ class QueueTest2 {
 
         // more test code
 
-        for(int i = 1; i<4; ++i)
+        for(int i = 1; i<5; ++i)
         try { 
             q2.enQueue(i);         
         } catch (QueueException e) {
