@@ -11,7 +11,7 @@ class QueueException extends Exception {
 // describe an Abstract Data Type (ADT) such as Queue or Stack
 interface Queue {
     public void enQueue(int x) throws QueueException;
-    public int deQueue() throws QueueException;
+    public int deQueue(int i) throws QueueException;
     public boolean isEmpty();   
     public void display();  
 }
@@ -39,23 +39,32 @@ class QueueLL implements Queue {
             tail.next = t;
             
         tail = t;           // new node is now at the tail
+        System.out.println("LL Inserted " + x);
     }
 
  
     // assume the queue is non-empty when this method is called, otherwise thro exception
-    public int deQueue() throws QueueException {
-        int deleting = head.data;
-        head = head.next;
-        
-        return deleting;
+    public int deQueue(int x) throws QueueException {
+        if(isEmpty()){
+            throw new QueueException("\nLL Queue is empty!\n");
+        } else {
+            int deleting = head.data;
+            head = head.next;
+            System.out.println("LL Node Removed " + x);
+            return deleting;
+        }
     }
 
+
     public boolean isEmpty() {
-        return head == head.next;
+        return head == z;
     }
  
     public void display() {
-        System.out.println("\nThe queue values are:\n");
+        if(isEmpty()) {
+            System.out.println("\nLL Empty Queue\n");
+        } else {
+        System.out.println("\nThe LL queue values are: ");
 
         Node t = head;
         while( t != null) {
@@ -63,7 +72,10 @@ class QueueLL implements Queue {
             t = t.next;
         }
         System.out.println("\n");
-    } 
+        }
+    }
+
+
 
 } // end of QueueLL class
 
@@ -75,51 +87,58 @@ class QueueCB implements Queue {
 
  
     public QueueCB() {
-        qmax = 4;
-        size = front = back = 0;
+        qmax = 7;
+        size = back = 0;
+        front = 1;
         q = new int[qmax];
     }
 
     public void enQueue( int x) throws QueueException  {
-        size = x + 1;
+        size = q.length;
         if(size > qmax){
-            throw new QueueException("Queue is full!");
+            throw new QueueException("\nCB Queue is full!\n");
           } else {
             if (front == -1)
-                front = 0;
+                front = 1;
             back = (back + 1) % size;
             q[back] = x;
-            System.out.println("Inserted " + x);
+            System.out.println("CB Inserted " + x);
         }
     }
   
-    public int deQueue()  throws QueueException 
+    public int deQueue(int x)  throws QueueException 
     {
         if(isEmpty())
-            throw new QueueException("Queue is empty!");
+            throw new QueueException("\nCB Queue is empty!\n");
         int temp = q[front];
         if(front == back)
             front = back = -1;
         else
             front = (front+1) % q.length;
+        System.out.println("CB Element Removed " + x);
         return temp;
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        if(size == 0){
+            return true;
+        }
+        if(front == -1){
+            return true;
+        }
+        return false;
     }
 
     public void display() {
         int i;
         if (isEmpty()) {
-            System.out.println("Empty Queue");
+            System.out.println("\nCB Empty Queue\n");
         } else {
-            System.out.println("Front -> " + front);
-            System.out.println("Items -> ");
+            System.out.println("\nThe CB queue values are: ");
             for (i = front; i != back; i = (i + 1) % qmax)
-                System.out.print(q[i] + " ");
+                System.out.print(q[i] + "  ");
             System.out.println(q[i]);
-            System.out.println("Back -> " + back);
+            System.out.println("\n");
         }
     }
 }
@@ -131,10 +150,14 @@ class QueueTest2 {
         Queue q1, q2;
         q1 = new QueueLL();
         q2 = new QueueCB();
+
+        // EnQueue Code
+        //
         
         for(int i = 1; i<9; ++i)
         try { 
             q1.enQueue(i);
+            //q1.deQueue(i);
         } catch (QueueException e) {
             System.out.println("Exception thrown: " + e); 
         }
@@ -142,11 +165,39 @@ class QueueTest2 {
          
         q1.display();
 
-        // more test code
-
-        for(int i = 1; i<5; ++i)
+        
+        for(int i = 1; i<6; ++i)
         try { 
-            q2.enQueue(i);         
+            q2.enQueue(i); 
+            //q2.deQueue(i);       
+        } catch (QueueException e) {
+            System.out.println("Exception thrown: " + e); 
+        }
+
+        q2.display(); 
+
+
+        // DeQueue code
+        //
+
+        // Linked List Queue
+        for(int i = 1; i<9; ++i)
+        try { 
+            //q1.enQueue(i);
+            q1.deQueue(i);
+        } catch (QueueException e) {
+            System.out.println("Exception thrown: " + e); 
+        }
+        
+         
+        q1.display();
+
+
+        // Circular Queue
+        for(int i = 1; i<6; ++i)
+        try { 
+            //q2.enQueue(i);     
+            q2.deQueue(i);         
         } catch (QueueException e) {
             System.out.println("Exception thrown: " + e); 
         }
