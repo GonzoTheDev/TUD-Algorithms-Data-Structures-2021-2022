@@ -56,16 +56,39 @@ class SortedLL
              
     }    
     
-    /*
+    
     public boolean remove(int x) {
         Node prev, curr;
-        
+        curr = head;  // current node is set as the head node
+        prev = null; // previous node is set to null
+
+        try 
+        {
+            if(head.data == x){
+                head = head.next;
+                return true;
+            }else{
+                prev = head;
+                if(curr.data == x)
+                {
+                    prev = prev.next;
+                }
+                curr = prev.next;
+                prev.next = curr.next;
+                return true;
             }
+        }catch(Exception e) {
+            return false;
+        }
+    }
     
     public boolean isEmpty() {
-        
+        if(head == z){
+            return true;
+        }
+        return false;
     }
-    */
+    
     
     public void display()
     {
@@ -96,7 +119,7 @@ class SortedLL
         }
         
         
-        /*
+        
         while(!list.isEmpty())  {
             System.out.println("\nInput a value to remove: ");
             Scanner in = new Scanner(System.in);
@@ -106,6 +129,6 @@ class SortedLL
             list.display(); }
             else System.out.println("\nValue not in list");                        
         }
-        */
+        
     }
 }
