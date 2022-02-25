@@ -62,24 +62,20 @@ class SortedLL
         curr = head;  // current node is set as the head node
         prev = null; // previous node is set to null
 
-        try 
+        if(curr != null && curr.data == x){
+            head = curr.next;
+            return true;
+        }
+        while (curr != z && curr.data != x) {
+                prev = curr;
+                curr = curr.next;
+        }
+        if(curr == z)
         {
-            if(head.data == x){
-                head = head.next;
-                return true;
-            }else{
-                prev = head;
-                if(curr.data == x)
-                {
-                    prev = prev.next;
-                }
-                curr = prev.next;
-                prev.next = curr.next;
-                return true;
-            }
-        }catch(Exception e) {
             return false;
         }
+        prev.next = curr.next;
+        return true;
     }
     
     public boolean isEmpty() {
