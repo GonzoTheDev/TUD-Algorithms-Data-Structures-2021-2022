@@ -5,15 +5,32 @@ import java.util.Scanner;
 class SortedLL
 {
     // internal data structure and
-    // constructor code to be added here
+    // constructor code to be added here 
+
+    private class Node {
+        int data;
+        Node next;
+    }
     
-    
+    Node z, head, tail;
     
     // this is the crucial method
-    public void insert(int x)
+    public void insert(int x) 
     {
-        Node prev, curr, t;
+        Node t;
           
+        t = new Node();
+        t.data = x;
+        t.next = z;
+
+        if(head == z)       // case of empty list
+            head = t;
+        else                // case of list not empty
+            tail.next = t;
+            
+        tail = t;           // new node is now at the tail
+        System.out.println("LL Inserted " + x);
+
              
     }    
     
@@ -47,7 +64,7 @@ class SortedLL
         double x;
         int i, r;
         
-        /*
+        
            for(i = 1; i <= 5; ++i)  {
            x =  (Math.random()*100.0);
            r = (int) x; 
@@ -55,7 +72,7 @@ class SortedLL
            list.insert(r);
            list.display();            
         }
-        */
+        
         
         /*
         while(!list.isEmpty())  {
