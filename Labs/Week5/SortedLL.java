@@ -5,32 +5,54 @@ import java.util.Scanner;
 class SortedLL
 {
     // internal data structure and
-    // constructor code to be added here 
-
-    private class Node {
+    // constructor code to be added here
+    
+    class Node {
         int data;
         Node next;
+ 
+        public Node(int data)
+        {
+            this.data = data;
+        }
     }
-    
-    Node z, head, tail;
+    Node head, z;
+
+    public SortedLL()
+    {
+        z = new Node(0);
+        z.next = z;
+        head = z;
+    }
+ 
     
     // this is the crucial method
-    public void insert(int x) 
+    public void insert(int x)
     {
-        Node t;
-          
-        t = new Node();
-        t.data = x;
-        t.next = z;
+        //Node  t = new Node(x);
+        //t.next = head;
+        //head = t;
+        
+        Node prev, curr, t; // null nodes
+        t = new Node(x); // t is a new node with data value x
+        curr = head;  // current node is set as the head node which equals z
+        prev = null; // previous node is set to null
+        z.data = x; // z data is set to x
 
-        if(head == z)       // case of empty list
+        while (curr != null && curr.data < t.data) 
+        {
+            prev = curr; // make previous node equal to current node
+            curr = curr.next; // make current node equal to the node pointer curr.next
+        }
+        if (curr == head)
+        {
             head = t;
-        else                // case of list not empty
-            tail.next = t;
-            
-        tail = t;           // new node is now at the tail
-        System.out.println("LL Inserted " + x);
-
+        }
+        else 
+        {
+            prev.next = t;
+        }
+        t.next = curr;
              
     }    
     
@@ -59,7 +81,7 @@ class SortedLL
     public static void main(String args[])   
     {
         SortedLL list = new SortedLL();
-        //list.display();
+        list.display();
         
         double x;
         int i, r;
