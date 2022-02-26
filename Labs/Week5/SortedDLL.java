@@ -43,18 +43,24 @@ class SortedDLL
         // loop back over it until the condition is no longer satisfied
         while (curr != null && curr.data < t.data) 
         {
-            temp = curr; // make previous node equal to current node
+            temp = curr; // make temp node equal to current node
             curr = curr.next; // make current node equal to the node pointer curr.next
         }
 
         // If the current node is the head, make our new node the head, else set the temporary nodes next pointer to our new node
         if (curr == head)
         {
+            t.next = head;
+            t.next.prev = t;
             head = t;
         }
         else 
         {
             temp.next = t;
+            if(t.next != tail)
+            {
+                t.prev = temp;
+            }
         }
 
         // Set our new nodes next pointer to the current node that was found to be higher than the new node. And the previous pointer to the temp node
@@ -95,9 +101,14 @@ class SortedDLL
     public void display()
     {
         Node t = head;
+        Node test;
         System.out.print("\nHead -> ");
         while( t != tail) {
             System.out.print(t.data + " -> ");
+            if(t.prev != null) {
+                test = t.prev;
+                System.out.print(" || Prev -> " + test.data + " || ");
+            }
             t = t.next;
         }
         System.out.println("Tail\n");
