@@ -2,27 +2,29 @@
 // Skeleton code
 import java.util.Scanner;
 
-class SortedLL
+class SortedDLL
 {
     // internal data structure and
     // constructor code to be added here
     
     class Node {
         int data;
-        Node next;
+        Node next, prev;
  
         public Node(int data)
         {
             this.data = data;
         }
     }
-    Node head, z;
+    Node head, tail;
 
-    public SortedLL()
+    public SortedDLL()
     {
-        z = new Node(0);
-        z.next = z;
-        head = z;
+        tail = new Node(0);
+        tail.next = tail;
+        tail.prev = head;
+        head = tail;
+        head.prev = null;
     }
  
     
@@ -30,53 +32,60 @@ class SortedLL
     public void insert(int x)
     {
         
-        Node prev, curr, t; // null nodes
+        Node temp, curr, t; // null nodes
         t = new Node(x); // t is a new node with data value x
-        curr = head;  // current node is set as the head node which equals z
-        prev = null; // previous node is set to null
-        z.data = x; // z data is set to x
+        curr = head;  // current node is set as the head node which equals tail
+        temp = null; // previous node is set to null
+        tail.data = x; // tail data is set to x
 
+        // While the current node is not null and current nodes data is less than the new nodes data, 
+        // store current node in temp node and set current node to the next node and 
+        // loop back over it until the condition is no longer satisfied
         while (curr != null && curr.data < t.data) 
         {
-            prev = curr; // make previous node equal to current node
+            temp = curr; // make previous node equal to current node
             curr = curr.next; // make current node equal to the node pointer curr.next
         }
+
+        // If the current node is the head, make our new node the head, else set the temporary nodes next pointer to our new node
         if (curr == head)
         {
             head = t;
         }
         else 
         {
-            prev.next = t;
+            temp.next = t;
         }
+
+        // Set our new nodes next pointer to the current node that was found to be higher than the new node. And the previous pointer to the temp node
         t.next = curr;
              
     }    
     
     
     public boolean remove(int x) {
-        Node prev, curr;
+        Node temp, curr;
         curr = head;  // current node is set as the head node
-        prev = null; // previous node is set to null
+        temp = null; // previous node is set to null
 
         if(curr != null && curr.data == x){
             head = curr.next;
             return true;
         }
-        while (curr != z && curr.data != x) {
-                prev = curr;
+        while (curr != tail && curr.data != x) {
+                temp = curr;
                 curr = curr.next;
         }
-        if(curr == z)
+        if(curr == tail)
         {
             return false;
         }
-        prev.next = curr.next;
+        temp.next = curr.next;
         return true;
     }
     
     public boolean isEmpty() {
-        if(head == z){
+        if(head == tail){
             return true;
         }
         return false;
@@ -87,16 +96,16 @@ class SortedLL
     {
         Node t = head;
         System.out.print("\nHead -> ");
-        while( t != z) {
+        while( t != tail) {
             System.out.print(t.data + " -> ");
             t = t.next;
         }
-        System.out.println("Z\n");
+        System.out.println("Tail\n");
     }
     
     public static void main(String args[])   
     {
-        SortedLL list = new SortedLL();
+        SortedDLL list = new SortedDLL();
         list.display();
         
         double x;
