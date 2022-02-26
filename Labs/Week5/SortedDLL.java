@@ -50,7 +50,7 @@ class SortedDLL
         // If the current node is the head, make our new node the head, else set the temporary nodes next pointer to our new node
         if (curr == head)
         {
-            t.next = head;
+            t.next = tail;
             t.next.prev = t;
             head = t;
         }
@@ -72,7 +72,7 @@ class SortedDLL
     public boolean remove(int x) {
         Node temp, curr;
         curr = head;  // current node is set as the head node
-        temp = null; // previous node is set to null
+        temp = null; // temp node is set to null
 
         if(curr != null && curr.data == x){
             head = curr.next;
@@ -81,6 +81,7 @@ class SortedDLL
         while (curr != tail && curr.data != x) {
                 temp = curr;
                 curr = curr.next;
+                curr.prev = temp;
         }
         if(curr == tail)
         {
@@ -104,14 +105,19 @@ class SortedDLL
         Node test;
         System.out.print("\nHead -> ");
         while( t != tail) {
-            System.out.print(t.data + " -> ");
             if(t.prev != null) {
                 test = t.prev;
-                System.out.print(" || Prev -> " + test.data + " || ");
+                if(t.next == tail){
+                    System.out.print("\n" + test.data + " <- " + t.data + " -> ");
+                } else {
+                    System.out.print("\n" + test.data + " <- " + t.data + " -> " + t.next.data);
+                }
+            }else{
+                System.out.print(t.data);
             }
             t = t.next;
         }
-        System.out.println("Tail\n");
+        System.out.println("\nTail\n");
     }
     
     public static void main(String args[])   
