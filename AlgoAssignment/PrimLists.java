@@ -2,7 +2,10 @@
 // Uses an Adjacency Linked Lists, suitable for sparse graphs
 
 import java.io.*;
-import java.util.*;
+import java.util.Stack;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.LinkedList;
 
 class GraphLists {
     class Node {
@@ -27,9 +30,10 @@ class GraphLists {
     // default constructor
     public GraphLists(String graphFile)  throws IOException
     {
+        System.out.println(); //    for Neatness
         int u, v;
         int e, wgt;
-        Node t;
+        Node t, n;
 
         FileReader fr = new FileReader(graphFile);
 		BufferedReader reader = new BufferedReader(fr);
@@ -63,18 +67,12 @@ class GraphLists {
             
             System.out.println("Edge " + toChar(u) + "--(" + wgt + ")--" + toChar(v));    
             
-            // write code to put edge into adjacency matrix     
-            t = new Node(); 
-            t.vert = v; 
-            t.wgt = wgt; 
-            t.next = adj[u]; 
-            adj[u] = t;
-
-            t = new Node(); 
-            t.vert = u; 
-            t.wgt = wgt; 
-            t.next = adj[v]; 
-            adj[v] = t;   
+            // write code to put edge into adjacency matrix
+            t = new Node(); t.vert = v; t.wgt = wgt;
+            t.next = adj[u]; adj[u] = t; 
+            n = new Node(); n.vert = u; n.wgt = wgt;
+             n.next = adj[v]; adj[v] = n;
+            
         }	       
     }
    
@@ -101,59 +99,68 @@ class GraphLists {
     
 	public void MST_Prim(int s)
 	{
+        System.out.println("");
         int v, u;
         int wgt, wgt_sum = 0;
         int[]  dist, parent, hPos;
         Node t;
 
-        //declare 3 arrays
-        dist = new int[V + 1];
-        parent = new int[V + 1];
-        hPos = new int[V +1];
+        //initialising each array
+        dist = new int[V+1];
+        parent = new int[V+1];
+        hPos = new int[V+1];
 
-        //initialise arrays
-        for(v = 0; v <= V; ++v){
-
-            dist[v] = Integer.MAX_VALUE;
-            parent[v] = 0;
-            hPos[v] = 0;
+        for(int i = 0; i <= V; i++)
+        {
+            hPos[i] = 0;
+            parent[i] = 0;
+            dist[i] = Integer.MAX_VALUE;
         }
         
         dist[s] = 0;
+        dist[0] = 0;
+        parent[s] = s;
         
         Heap pq =  new Heap(V, dist, hPos);
         pq.insert(s);
         
-        while (! pq.isEmpty())  
+        while ( !(pq.isEmpty()))  
         {
-            // most of alg here
             v = pq.remove();
-            wgt_sum += dist[v];//add the dist/wgt of vert removed to mean spanning tree
 
-            //System.out.println("\nAdding to MST edge {0} -- ({1}) -- {2}", toChar(parent[v]), dist[v], toChar[v]);
+            dist[v] = -dist[v]; //  -dist to show this vertex has been visited and does not need to be done again
 
-            dist[v] = -dist[v];//mark it as done by making it negative
+            t = adj[v];
 
-            for(t = adj[v]; t != z; t = t.next){
-
-                u = t.vert;
-                wgt = t.wgt;
-
-                if(wgt < dist[u]){ //weight less than current value
-
-                    dist[u] = wgt;
-                    parent[u] = v;
-
-                    if(hPos[u] == 0)// not in heap insert
-                        pq.insert(u);
+            while(t.next != t) //   Check each vertex with an edge to v
+            {
+                if(t.wgt < dist[t.vert] && dist[t.vert] > 0) // dist[t.vert] is the distance between the 2 edges. if less than 0 already done!!
+                {
+                    dist[t.vert] = t.wgt;
+                    parent[t.vert] = v;
+                    if(hPos[t.vert] == 0) //    if hpos is 0 it is not on the heap so insert, else siftup with updated shorter distance
+                    {
+                        pq.insert(t.vert);
+                    }
                     else
-                        pq.siftUp(hPos[u]);//if already in heap siftup the modified heap node
+                    {
+                        pq.siftUp(hPos[t.vert]);
+                    }
                 }
+
+                t = t.next; //  increment t
             }
 
+            
         }
-        System.out.print("\n\nWeight of MST = " + wgt_sum + "\n");
-        
+        for(int i = 0; i<=V; i++)
+        {
+            wgt_sum += dist[i];
+        }
+        wgt_sum *= -1; //   Turn back to positive number to print the weight of MST
+
+        System.out.print("\n\nWeight of MST = " + wgt_sum + "\n"); //   Display full weight of minimum spanning tree
+
         mst = parent;                      		
 	}
     
@@ -161,27 +168,79 @@ class GraphLists {
     {
             System.out.print("\n\nMinimum Spanning tree parent array is:\n");
             for(int v = 1; v <= V; ++v)
-                System.out.println(toChar(v) + " -> " + toChar(mst[v]));
+                if(v == mst[v]) // Draw @ symbol for starter node
+                {
+                    System.out.println(toChar(v) + " -> @");
+                }
+                else
+                {
+                    System.out.println(toChar(v) + " -> " + toChar(mst[v]));
+                }
             System.out.println("");
     }
 
-    void DF(int v) {
-        
-        visited[v] = v;
-        System.out.print(toChar(v) + " ");
-        for(int i = 1;i < adj.length;i++)    {
-            if(visited[adj[i].vert] == 0){
-                DF(adj[i].vert);
-            }
-            
-        }
+    public void DF( int s) 
+    {
+        id = 0;
+        visited = new int[V+1];
+        System.out.println("");
 
+        for(int j = 1; j<=V; j++)
+        {
+            visited[j] = 0;
+        }
+        dfVisit(0, s);
     }
 
-    public void initialize() {
-        visited = new int[V + 1];
-        for(int i = 0;i < adj.length;i++){
+    private void dfVisit( int prev, int v)
+    {
+        Node n = new Node();
+        n = adj[v];
+        visited[v] = ++id;
+        System.out.println("Visiting node [" + toChar(v) + "] from node [" + toChar(prev) + "]");
+        while(n.next != n)
+        {
+            if(visited[n.vert]==0)
+            {
+                dfVisit(v, n.vert); //recursively call the next vertex
+            }
+            n = n.next;
+        }
+    }
+
+
+    public void BF(int s)
+    {
+        int id = 0;
+        Node n;
+        Queue<Integer> q = new LinkedList<Integer>(); //    Queue to get next vertex through FIFO
+        //Printing a line space in between df and bf
+        System.out.println();
+        System.out.println("Breadth First Traversal:");
+
+        //  initialise visited
+        for(int i=0; i<=V; i++)
+        {
             visited[i] = 0;
+        }
+        q.add(s);
+        while(!(q.isEmpty()))
+        {
+            int v = q.poll();
+            if(visited[v]==0) //    if not visited
+            {
+                n = adj[v];
+                visited[v] = ++id;
+                System.out.println("Currently visiting [" + toChar(v) + "]" );
+                while(n.next != n) //   While not on last node
+                {
+                    if(visited[n.vert]==0) //   if vertex not visited add to queue
+                    {
+                        q.add(n.vert);
+                    }
+                    n = n.next;
+                }
+            }
         }
     }
 
@@ -190,22 +249,27 @@ class GraphLists {
 public class PrimLists {
     public static void main(String[] args) throws IOException
     {
-        int s = 2;
-        String fname = "wGraph1.txt";               
+        Scanner sc = new Scanner(System.in);
+        String fname;
+        System.out.print("\nInput name of file with graph definition: ");
+        fname = sc.nextLine();   
+        
+        System.out.print("\nInput the number of the vertex you want to start at: ");
+        int s = sc.nextInt();
 
         GraphLists g = new GraphLists(fname);
        
-        //g.display(); 
-
-        g.initialize();  //Initialize all nodes as not visited
-
-        g.DF(s);
+        g.display();
+        System.out.println();             
         
-        //g.BF(s);
+        System.out.print("Depth first using recursion:");
+        g.DF(s);
         
         g.MST_Prim(s);
         
-        g.showMST();       
+        g.showMST();
+        
+        g.BF(s);
         
     }
     
@@ -214,9 +278,7 @@ public class PrimLists {
 
 
 /*
-
 Heap Code for efficient implementationofPrim's Alg
-
 */
 
 class Heap
@@ -248,41 +310,20 @@ class Heap
 
     public void siftUp( int k) 
     {
+        //  k = last element in list
         int v = a[k];
 
-        a[0] = 0;
-        dist[0] = Integer.MIN_VALUE;
-
-        //vertex using dist moved up heap
-        while(dist[v] < dist[a[k/2]]){
-
-
-            a[k] = a[k/2]; //parent vertex is assigned pos of child vertex
-
-            hPos[a[k]] = k;//hpos modified for siftup
-
-            k = k/2;// index of child assigned last parent to continue siftup
+        //  code yourself
+        //  must use hPos[] and dist[] arrays
+    
+        while (dist[v] < dist[a[k / 2]]) {
+            hPos[a[k]]= k/2; // Hpos holds the indexes of each element in the heap
+            a[k] = a[k / 2];
+            k = k / 2;
         }
+        a[k] = v;
+        hPos[v] = k;
 
-        a[k] = v;//resting pos of vertex assigned to heap
-
-        hPos[v] = k;//index of resting pos of vertex updated in hpos
-
-        //display hpos array
-       /* System.out.println("\nThe following is the hpos array after siftup: \n");
-
-        for(int i = 0; i < MAX; i ++){
-
-            System.out.println("%d", hPos[i]);
-        }
-
-        System.out.println("\n Following is heap array after siftup: \n");
-
-        for (int i = 0; i < MAX; i ++ ){
-
-            System.out.println("%d" , h[i]);
-
-        }*/
     }
 
 
@@ -292,27 +333,35 @@ class Heap
        
         v = a[k];  
         
-        while(k <= N/2){
+        //  code yourself 
+        //  must use hPos[] and dist[] arrays
 
-            j = 2 * k;
+        while(k * 2 < N) // Check for left child Node
+        {
+            j = k * 2;
+            if(j < N && dist[ a[j] ] > dist[ a[j+1] ]) //   Check for right child, if exist compare 2 children
+            {
+                ++j; // increment if j+1 is smaller to compare smallest child
+            }
+            if(dist[v] <= dist[ a[j] ])
+            {
+                break;
+            }
 
-            if(j < N && dist[a[j]] > dist[a[j + 1]]) ++j; //if node is > left increment j child
+            hPos[ a[k] ] = j;
+            a[k] = a[j];
+            k = j;
 
-            if(dist[v] <= dist[a[j]]) break;//if sizeof parent vertex is less than child stop.
-
-            a[k] = a[j];//if parent is greater than child then child assigned parent pos
-
-            hPos[a[k]] = k;//update new pos of last child
-
-            k = j;//assign vertex new pos
         }
-        a[k] = v;//assign rest place of vertex to heap
-        hPos[v] = k;//update pos of the vertex in hpos array
+        hPos[v] = k;
+        a[k] = v;
+
     }
 
 
     public void insert( int x) 
     {
+        System.out.println("Inserting: " + x);
         a[++N] = x;
         siftUp( N);
     }
@@ -321,6 +370,7 @@ class Heap
     public int remove() 
     {   
         int v = a[1];
+        System.out.println("Removing: " + v);
         hPos[v] = 0; // v is no longer in heap        
         
         a[1] = a[N--];
@@ -330,6 +380,4 @@ class Heap
         
         return v;
     }
-
 }
-
