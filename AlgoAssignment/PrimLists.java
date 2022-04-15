@@ -203,9 +203,9 @@ public class PrimLists {
         
         //g.BF(s);
         
-        //g.MST_Prim(s);
+        g.MST_Prim(s);
         
-        //g.showMST();       
+        g.showMST();       
         
     }
     
