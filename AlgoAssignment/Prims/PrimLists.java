@@ -1,3 +1,5 @@
+package Prims;
+
 // Simple weighted graph representation 
 // Uses an Adjacency Linked Lists, suitable for sparse graphs
 
@@ -30,10 +32,9 @@ class GraphLists {
     // default constructor
     public GraphLists(String graphFile)  throws IOException
     {
-        System.out.println(); //    for Neatness
         int u, v;
         int e, wgt;
-        Node t, n;
+        Node t, w;
 
         FileReader fr = new FileReader(graphFile);
 		BufferedReader reader = new BufferedReader(fr);
@@ -68,10 +69,17 @@ class GraphLists {
             System.out.println("Edge " + toChar(u) + "--(" + wgt + ")--" + toChar(v));    
             
             // write code to put edge into adjacency matrix
-            t = new Node(); t.vert = v; t.wgt = wgt;
-            t.next = adj[u]; adj[u] = t; 
-            n = new Node(); n.vert = u; n.wgt = wgt;
-             n.next = adj[v]; adj[v] = n;
+            t = new Node(); 
+            t.vert = v; 
+            t.wgt = wgt;
+            t.next = adj[u]; 
+            adj[u] = t; 
+
+            w = new Node(); 
+            w.vert = u; 
+            w.wgt = wgt;
+            w.next = adj[v]; 
+            adj[v] = w;
             
         }	       
     }
@@ -99,84 +107,98 @@ class GraphLists {
     
 	public void MST_Prim(int s)
 	{
-        System.out.println("");
         int v, u;
         int wgt, wgt_sum = 0;
         int[]  dist, parent, hPos;
         Node t;
 
-        //initialising each array
+        // Initialise arrays
         dist = new int[V+1];
         parent = new int[V+1];
         hPos = new int[V+1];
 
         for(int i = 0; i <= V; i++)
         {
-            hPos[i] = 0;
-            parent[i] = 0;
             dist[i] = Integer.MAX_VALUE;
+            parent[i] = 0;
+            hPos[i] = 0;
         }
-        
+
+        parent[s] = s;
         dist[s] = 0;
         dist[0] = 0;
-        parent[s] = s;
-        
+
         Heap pq =  new Heap(V, dist, hPos);
         pq.insert(s);
-        
-        while ( !(pq.isEmpty()))  
+
+        while ( !(pq.isEmpty()))
         {
             v = pq.remove();
 
-            dist[v] = -dist[v]; //  -dist to show this vertex has been visited and does not need to be done again
+            // Mark vertex as visited
+            dist[v] = -dist[v];
 
             t = adj[v];
 
-            while(t.next != t) //   Check each vertex with an edge to v
+            // Check if vertex has an edge to v
+            while(t.next != t)
             {
-                if(t.wgt < dist[t.vert] && dist[t.vert] > 0) // dist[t.vert] is the distance between the 2 edges. if less than 0 already done!!
+                // If dist[t.vert] is less than 0, this vertex has been checked
+                if(t.wgt < dist[t.vert] && dist[t.vert] > 0)
                 {
                     dist[t.vert] = t.wgt;
                     parent[t.vert] = v;
-                    if(hPos[t.vert] == 0) //    if hpos is 0 it is not on the heap so insert, else siftup with updated shorter distance
+
+                    if(hPos[t.vert] == 0)
                     {
                         pq.insert(t.vert);
-                    }
-                    else
-                    {
+                    }else{
                         pq.siftUp(hPos[t.vert]);
                     }
+
                 }
 
-                t = t.next; //  increment t
+                // Set t to the next node
+                t = t.next;
             }
-
             
         }
+
+        // Add up all edge weights of the MST
         for(int i = 0; i<=V; i++)
         {
             wgt_sum += dist[i];
         }
-        wgt_sum *= -1; //   Turn back to positive number to print the weight of MST
 
-        System.out.print("\n\nWeight of MST = " + wgt_sum + "\n"); //   Display full weight of minimum spanning tree
+        // Make sure result is positive integer for printing the final MST weight
+        wgt_sum *= -1;
 
-        mst = parent;                      		
+        // Print final MST Weight
+        System.out.print("\n\n\nTOTAL MST WEIGHT ->> " + wgt_sum + "\n\n");
+
+        mst = parent;
 	}
-    
+
     public void showMST()
     {
-            System.out.print("\n\nMinimum Spanning tree parent array is:\n");
+            // Display MST Parent Array
+            System.out.print("\n\n\nMinimum Spanning tree parent array ->>\n");
+
+            // Traverse the MST and convert the integer values to alphabetical characters
             for(int v = 1; v <= V; ++v)
-                if(v == mst[v]) // Draw @ symbol for starter node
+
+                if(v == mst[v])
                 {
+                    // Demark the starting node with an @ symbol
                     System.out.println(toChar(v) + " -> @");
-                }
-                else
-                {
+
+                }else{
+
                     System.out.println(toChar(v) + " -> " + toChar(mst[v]));
                 }
-            System.out.println("");
+
+            // Newline for formatting
+            System.out.print("\n\n");
     }
 
     public void DF( int s) 
@@ -242,6 +264,10 @@ class GraphLists {
                 }
             }
         }
+
+        // Newline for formatting
+        System.out.print("\n\n");
+        
     }
 
 }
