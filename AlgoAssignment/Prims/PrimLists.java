@@ -235,8 +235,7 @@ class GraphLists {
     {
         int id = 0;
         Node n;
-        Queue<Integer> q = new LinkedList<Integer>(); //    Queue to get next vertex through FIFO
-        //Printing a line space in between df and bf
+        Queue<Integer> q = new LinkedList<Integer>();
         System.out.println();
         System.out.println("Breadth First Traversal:");
 
@@ -249,14 +248,14 @@ class GraphLists {
         while(!(q.isEmpty()))
         {
             int v = q.poll();
-            if(visited[v]==0) //    if not visited
+            if(visited[v]==0)
             {
                 n = adj[v];
                 visited[v] = ++id;
                 System.out.println("Currently visiting [" + toChar(v) + "]" );
-                while(n.next != n) //   While not on last node
+                while(n.next != n)
                 {
-                    if(visited[n.vert]==0) //   if vertex not visited add to queue
+                    if(visited[n.vert]==0)
                     {
                         q.add(n.vert);
                     }
@@ -265,7 +264,7 @@ class GraphLists {
             }
         }
 
-        // Newline for formatting
+        // Newlines for formatting
         System.out.print("\n\n");
         
     }
@@ -343,7 +342,7 @@ class Heap
         //  must use hPos[] and dist[] arrays
     
         while (dist[v] < dist[a[k / 2]]) {
-            hPos[a[k]]= k/2; // Hpos holds the indexes of each element in the heap
+            hPos[a[k]]= k/2; 
             a[k] = a[k / 2];
             k = k / 2;
         }
@@ -362,12 +361,12 @@ class Heap
         //  code yourself 
         //  must use hPos[] and dist[] arrays
 
-        while(k * 2 < N) // Check for left child Node
+        while(k * 2 < N) 
         {
             j = k * 2;
-            if(j < N && dist[ a[j] ] > dist[ a[j+1] ]) //   Check for right child, if exist compare 2 children
+            if(j < N && dist[ a[j] ] > dist[ a[j+1] ])
             {
-                ++j; // increment if j+1 is smaller to compare smallest child
+                ++j; 
             }
             if(dist[v] <= dist[ a[j] ])
             {
@@ -397,12 +396,12 @@ class Heap
     {   
         int v = a[1];
         System.out.println("Removing: " + v);
-        hPos[v] = 0; // v is no longer in heap        
+        hPos[v] = 0;        
         
         a[1] = a[N--];
         siftDown(1);
         
-        a[N+1] = 0;  // put null node into empty spot
+        a[N+1] = 0;
         
         return v;
     }
