@@ -285,14 +285,18 @@ public class PrimLists {
         GraphLists g = new GraphLists(fname);
        
         g.display();
+        
         System.out.println();             
         
         System.out.print("Depth first using recursion:");
+
         g.DF(s);
-        
+
         g.MST_Prim(s);
         
         g.showMST();
+
+        System.out.print("Breadth first:");
         
         g.BF(s);
         
